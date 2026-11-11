@@ -61,3 +61,12 @@
     invoke-virtual {v0}, Lcom/behoc/toan/MainActivity;->finish()V
     return-void
 .end method
+
+.method public speak2(Ljava/lang/String;FFLjava/lang/String;)V
+    .registers 6
+    .annotation runtime Landroid/webkit/JavascriptInterface;
+    .end annotation
+    iget-object v0, p0, Lcom/behoc/toan/Bridge;->act:Lcom/behoc/toan/MainActivity;
+    invoke-virtual {v0, p1, p2, p3, p4}, Lcom/behoc/toan/MainActivity;->speak2(Ljava/lang/String;FFLjava/lang/String;)V
+    return-void
+.end method

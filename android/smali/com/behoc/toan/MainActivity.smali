@@ -32,6 +32,8 @@
     invoke-virtual {v1, v2}, Landroid/webkit/WebSettings;->setAllowFileAccess(Z)V
     const/4 v3, 0x0
     invoke-virtual {v1, v3}, Landroid/webkit/WebSettings;->setMediaPlaybackRequiresUserGesture(Z)V
+    const/16 v2, 0x64
+    invoke-virtual {v1, v2}, Landroid/webkit/WebSettings;->setTextZoom(I)V
 
     const v1, -0xb0405
     invoke-virtual {v0, v1}, Landroid/webkit/WebView;->setBackgroundColor(I)V
@@ -43,6 +45,9 @@
     new-instance v1, Landroid/speech/tts/TextToSpeech;
     invoke-direct {v1, p0, p0}, Landroid/speech/tts/TextToSpeech;-><init>(Landroid/content/Context;Landroid/speech/tts/TextToSpeech$OnInitListener;)V
     iput-object v1, p0, Lcom/behoc/toan/MainActivity;->tts:Landroid/speech/tts/TextToSpeech;
+    new-instance v2, Lcom/behoc/toan/Done;
+    invoke-direct {v2, p0}, Lcom/behoc/toan/Done;-><init>(Lcom/behoc/toan/MainActivity;)V
+    invoke-virtual {v1, v2}, Landroid/speech/tts/TextToSpeech;->setOnUtteranceProgressListener(Landroid/speech/tts/UtteranceProgressListener;)I
 
     new-instance v1, Lcom/behoc/toan/Bridge;
     invoke-direct {v1, p0}, Lcom/behoc/toan/Bridge;-><init>(Lcom/behoc/toan/MainActivity;)V
@@ -164,4 +169,41 @@
     :consume
     const/4 v0, 0x1
     return v0
+.end method
+
+.method public speak2(Ljava/lang/String;FFLjava/lang/String;)V
+    .registers 10
+    iget-object v0, p0, Lcom/behoc/toan/MainActivity;->tts:Landroid/speech/tts/TextToSpeech;
+    if-eqz v0, :done
+    invoke-virtual {v0, p2}, Landroid/speech/tts/TextToSpeech;->setSpeechRate(F)I
+    invoke-virtual {v0, p3}, Landroid/speech/tts/TextToSpeech;->setPitch(F)I
+    const-wide/16 v1, 0x190
+    const/4 v3, 0x0
+    const-string v4, "sil"
+    invoke-virtual {v0, v1, v2, v3, v4}, Landroid/speech/tts/TextToSpeech;->playSilentUtterance(JILjava/lang/String;)I
+    const/4 v3, 0x1
+    const/4 v4, 0x0
+    invoke-virtual {v0, p1, v3, v4, p4}, Landroid/speech/tts/TextToSpeech;->speak(Ljava/lang/CharSequence;ILandroid/os/Bundle;Ljava/lang/String;)I
+    :done
+    return-void
+.end method
+
+.method public ttsDone(Ljava/lang/String;)V
+    .registers 6
+    iget-object v0, p0, Lcom/behoc/toan/MainActivity;->web:Landroid/webkit/WebView;
+    if-eqz v0, :done
+    new-instance v1, Ljava/lang/StringBuilder;
+    invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V
+    const-string v2, "window.ttsDone&&ttsDone('"
+    invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    invoke-virtual {v1, p1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    const-string v2, "')"
+    invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    invoke-virtual {v1}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+    move-result-object v1
+    new-instance v2, Lcom/behoc/toan/Runner;
+    invoke-direct {v2, v0, v1}, Lcom/behoc/toan/Runner;-><init>(Landroid/webkit/WebView;Ljava/lang/String;)V
+    invoke-virtual {v0, v2}, Landroid/webkit/WebView;->post(Ljava/lang/Runnable;)Z
+    :done
+    return-void
 .end method

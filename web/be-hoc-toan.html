@@ -2,7 +2,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@800&display=swap">
 <style>
-/* Sân khấu 16:9 cố định (100rem x 56.25rem), 1rem tính bằng JS theo màn hình TV.
+/* Sân khấu 16:9 cố định (100rem x 56.25rem), 1rem tính bằng JS cho vừa màn TV.
    Viết CSS/JS kiểu cũ để chạy trên WebView đời cũ của TV.
    Bảng màu: nền hồng sữa, hồng kẹo #ff7eb6, tím nho #9b7bff, bạc hà #3fcf9c, vàng nắng #ffc93c, mực tím #4a2c5e. */
 html, body { height: 100%; margin: 0; }
@@ -19,11 +19,12 @@ body {
   color: #4a2c5e;
   font-family: "Baloo 2", "Comic Sans MS", "Segoe UI", sans-serif;
   font-weight: 800;
+  -webkit-text-size-adjust: 100%; text-size-adjust: 100%;
   -webkit-user-select: none; user-select: none;
 }
 #stage { position: absolute; left: 50%; top: 50%; width: 100rem; height: 56.25rem; margin-left: -50rem; margin-top: -28.125rem; }
 .scr, .ov { position: absolute; left: 0; top: 0; width: 100rem; height: 56.25rem; }
-.ov { z-index: 10; background: rgba(255,241,248,0.94); text-align: center; }
+.ov { z-index: 10; background: rgba(255,241,248,0.95); text-align: center; }
 .abs { position: absolute; }
 .center { text-align: center; }
 .st { width: 1em; height: 1em; vertical-align: -0.14em; }
@@ -33,14 +34,17 @@ body {
   padding: 0.7rem 2rem; box-shadow: 0 0.6rem 0 rgba(74,44,94,0.25); cursor: pointer;
   -webkit-transition: -webkit-transform .12s; transition: transform .12s; }
 .btn.small { font-size: 2.8rem; padding: 0.4rem 2rem; display: inline-block; }
+.btn.tiny { font-size: 2.2rem; padding: 0.3rem 1.6rem; display: inline-block; background: #fff; color: #6b4e85; box-shadow: 0 0.4rem 0 #f3d6ea; }
 .pink { background: #ff7eb6; } .grape { background: #9b7bff; } .mint { background: #3fcf9c; } .sun { background: #ffad33; } .ink { background: #6b4e85; }
-.f.on { box-shadow: 0 0 0 0.55rem #ffffff, 0 0 0 1.1rem #4a2c5e; -webkit-transform: scale(1.07); transform: scale(1.07); position: relative; z-index: 3; }
+.f.on { box-shadow: 0 0 0 0.55rem #ffffff, 0 0 0 1.1rem #4a2c5e; -webkit-transform: scale(1.07); transform: scale(1.07); z-index: 3; }
+.btn.f.on, .num.f.on { position: relative; }
+.abs.f.on { position: absolute; }
 
-/* Bé gái + bong bóng lời nói */
-.girlbox { position: absolute; }
-.girlbox svg { display: block; width: 100%; height: 100%; }
-.bob { -webkit-animation: bob 2.4s ease-in-out infinite; animation: bob 2.4s ease-in-out infinite; }
-.bubble { position: absolute; background: #fff; border-radius: 3rem; padding: 1.6rem 2.4rem; font-size: 3rem; line-height: 1.25;
+/* Phòng của bé */
+.room { position: absolute; left: 1.5rem; top: 1.5rem; width: 41rem; height: 53.25rem; border-radius: 3rem; overflow: hidden;
+  background: #ffe6f1; box-shadow: 0 0.8rem 0 rgba(74,44,94,0.14); }
+.room svg { display: block; width: 100%; height: 100%; }
+.bubble { position: absolute; background: #fff; border-radius: 3rem; padding: 1.6rem 2.2rem; font-size: 2.7rem; line-height: 1.25;
   box-shadow: 0 0.6rem 0 #f3d6ea; }
 .bubble:before { content: ""; position: absolute; left: -2.4rem; top: 3rem; border-style: solid; border-width: 1.4rem 2.6rem 1.4rem 0; border-color: transparent #fff transparent transparent; }
 .chip { display: inline-block; background: #fff; border-radius: 3rem; padding: 0.3rem 2rem; box-shadow: 0 0.4rem 0 #f3d6ea; }
@@ -77,33 +81,34 @@ body {
 .num.right { background: #3fcf9c !important; } .num.wrong { background: #b9a8c4 !important; }
 
 /* Thông báo đúng/sai */
-.fb-emoji { font-size: 12rem; line-height: 1; margin-top: 5rem; }
-.fb-big { font-size: 9.5rem; line-height: 1.1; margin-top: 1rem; }
+.fb-face { width: 15rem; height: 15rem; margin: 4rem auto 0; border-radius: 50%; overflow: hidden; background: #ffe6f1; box-shadow: 0 0 0 0.6rem #fff; }
+.fb-face svg { display: block; width: 100%; height: 100%; }
+.fb-big { font-size: 9.5rem; line-height: 1.1; margin-top: 1.5rem; }
 .fb-big.ok { color: #3fcf9c; text-shadow: 0 0.6rem 0 #2bb487; } .fb-big.no { color: #ff5fa2; text-shadow: 0 0.6rem 0 #e05595; }
-.fb-sub { font-size: 5.5rem; margin-top: 1.5rem; }
-.fb-delta { font-size: 5rem; margin-top: 0.6rem; }
+.fb-sub { font-size: 5.5rem; margin-top: 1.2rem; }
+.fb-delta { font-size: 4.6rem; margin-top: 0.4rem; }
 .fb-delta.up { color: #2bb487; } .fb-delta.down { color: #e05595; }
 
 /* Cửa hàng */
-.tabs { position: absolute; top: 8.2rem; left: 30rem; width: 68rem; white-space: nowrap; }
-.tab { display: inline-block; width: 10.4rem; margin-right: 0.9rem; text-align: center; font-size: 2.7rem; line-height: 5rem; border-radius: 2.5rem; background: #fff; color: #6b4e85; cursor: pointer;
+.tab { position: absolute; width: 12.6rem; height: 4.2rem; line-height: 4.2rem; text-align: center; font-size: 2.5rem; border-radius: 2.1rem; background: #fff; color: #6b4e85; cursor: pointer;
   box-shadow: 0 0.4rem 0 #f3d6ea; }
 .tab.act { background: #9b7bff; color: #fff; box-shadow: 0 0.4rem 0 #7a5ae0; }
-.grid { position: absolute; top: 15.6rem; left: 30rem; width: 68rem; height: 40rem; }
-.card { position: absolute; width: 21rem; height: 19rem; border-radius: 2.4rem; background: #fff; text-align: center; cursor: pointer; overflow: hidden;
+.grid { position: absolute; top: 18.4rem; left: 44.5rem; width: 54rem; height: 37rem; }
+.card { position: absolute; height: 17.8rem; border-radius: 2.2rem; background: #fff; text-align: center; cursor: pointer; overflow: hidden;
   box-shadow: 0 0.5rem 0 rgba(74,44,94,0.14); -webkit-transition: -webkit-transform .12s; transition: transform .12s; }
 .card.t1 { background: #eafbf3; } .card.t2 { background: #fff0f7; } .card.t3 { background: #fff6d6; }
-.card .img { height: 10.6rem; margin-top: 0.6rem; }
+.card .img { height: 9.4rem; margin: 0.6rem 0.6rem 0; }
 .card .img svg { width: 100%; height: 100%; }
-.card .nm { font-size: 2.2rem; line-height: 1.1; height: 4.8rem; padding: 0 0.8rem; overflow: hidden; }
-.card .stt { font-size: 2.3rem; line-height: 2.6rem; }
-.card .tag { position: absolute; left: 0.9rem; top: 0.8rem; font-size: 1.7rem; line-height: 2.4rem; padding: 0 1rem; border-radius: 1.2rem; color: #fff; }
+.card .nm { font-size: 2rem; line-height: 1.1; height: 4.4rem; padding: 0 0.6rem; overflow: hidden; }
+.card .stt { font-size: 1.9rem; line-height: 2.5rem; white-space: nowrap; }
+.card .tag { position: absolute; left: 0.8rem; top: 0.7rem; font-size: 1.6rem; line-height: 2.3rem; padding: 0 0.9rem; border-radius: 1.2rem; color: #fff; z-index: 2; }
 .card.t1 .tag { background: #3fcf9c; } .card.t2 .tag { background: #ff7eb6; } .card.t3 .tag { background: #e0a800; }
 .card .poor { color: #e05595; }
 .card .own { color: #2bb487; }
 .card.wear { box-shadow: 0 0 0 0.45rem #3fcf9c, 0 0.5rem 0 rgba(74,44,94,0.14); }
 .card.on { box-shadow: 0 0 0 0.55rem #ffffff, 0 0 0 1.1rem #4a2c5e; }
-.trylabel { position: absolute; left: 1rem; top: 46.4rem; width: 27rem; text-align: center; font-size: 2.4rem; color: #9b7bff; }
+.trylabel { position: absolute; left: 1.5rem; top: 45.6rem; width: 41rem; text-align: center; font-size: 2.3rem; }
+.trylabel span { background: rgba(255,255,255,0.9); color: #7a5ae0; border-radius: 2rem; padding: 0.2rem 1.6rem; }
 
 .anim-pop { -webkit-animation: pop .5s; animation: pop .5s; }
 .anim-shake { -webkit-animation: shake .5s; animation: shake .5s; }
@@ -111,23 +116,22 @@ body {
 @keyframes pop { 0% { transform: scale(.4); } 60% { transform: scale(1.12); } 100% { transform: scale(1); } }
 @-webkit-keyframes shake { 0%,100% { -webkit-transform: translateX(0); } 25%,75% { -webkit-transform: translateX(-2rem); } 50% { -webkit-transform: translateX(2rem); } }
 @keyframes shake { 0%,100% { transform: translateX(0); } 25%,75% { transform: translateX(-2rem); } 50% { transform: translateX(2rem); } }
-@-webkit-keyframes bob { 0%,100% { -webkit-transform: translateY(0); } 50% { -webkit-transform: translateY(-0.8rem); } }
-@keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-0.8rem); } }
 @-webkit-keyframes tw { 0%,100% { opacity: .15; } 50% { opacity: 1; } }
 @keyframes tw { 0%,100% { opacity: .15; } 50% { opacity: 1; } }
-@media (prefers-reduced-motion: reduce) { .anim-pop, .anim-shake, .bob, .tw { animation: none; -webkit-animation: none; } }
+@media (prefers-reduced-motion: reduce) { .anim-pop, .anim-shake, .tw { animation: none; -webkit-animation: none; } }
 </style>
 
 <div id="stage">
   <!-- Màn chính -->
   <div class="scr" id="home">
-    <div class="girlbox bob" id="homeGirl" style="left:7rem; top:4rem; width:25rem; height:50rem;"></div>
-    <div class="bubble" style="left:37rem; top:15rem; width:22rem;">Chị ơi, em muốn mua đồ! Chị làm bài để kiếm tiền cho em mua nhé!</div>
-    <div class="abs center" style="left:64rem; top:5rem; width:32rem;">
-      <div style="font-size:7.6rem; line-height:1; color:#9b7bff;">Bé Học Toán</div>
-      <div class="chip" style="font-size:4rem; margin-top:2rem;" id="homeStars"></div>
-      <div class="btn pink f" id="bPlay" style="margin-top:3.4rem; font-size:5rem;">Chơi nào!</div>
-      <div class="btn grape f" id="bShop" style="margin-top:2.6rem;">Cửa hàng</div>
+    <div class="room" id="homeRoom"></div>
+    <div class="bubble" style="left:45.5rem; top:9rem; width:16.5rem;">Chị ơi, em muốn mua đồ! Chị làm bài để kiếm tiền cho em mua nhé!</div>
+    <div class="abs center" style="left:66rem; top:3rem; width:31rem;">
+      <div style="font-size:7.2rem; line-height:1; color:#9b7bff;">Bé Học Toán</div>
+      <div class="chip" style="font-size:4rem; margin-top:1.8rem;" id="homeStars"></div>
+      <div class="btn pink f" id="bPlay" style="margin-top:3rem; font-size:5rem;">Chơi nào!</div>
+      <div class="btn grape f" id="bShop" style="margin-top:2.4rem;">Cửa hàng</div>
+      <div class="btn tiny f" id="bZoom" style="margin-top:3rem;">Cỡ màn hình 100%</div>
     </div>
   </div>
 
@@ -156,9 +160,9 @@ body {
 
   <!-- Kết quả -->
   <div class="scr" id="result" hidden>
-    <div class="girlbox bob" id="resGirl" style="left:7rem; top:4rem; width:25rem; height:50rem;"></div>
-    <div class="bubble" id="resBubble" style="left:37rem; top:15rem; width:22rem;"></div>
-    <div class="abs center" style="left:63rem; top:2rem; width:34rem;">
+    <div class="room" id="resRoom"></div>
+    <div class="bubble" id="resBubble" style="left:45.5rem; top:14rem; width:16.5rem;"></div>
+    <div class="abs center" style="left:66rem; top:2rem; width:31rem;">
       <div style="font-size:6rem; line-height:1.1; color:#9b7bff;">Xong bài!</div>
       <div style="font-size:3.8rem; line-height:1.3;" id="resRight"></div>
       <div style="font-size:4.2rem; line-height:1.3;" id="resDelta"></div>
@@ -171,18 +175,18 @@ body {
 
   <!-- Cửa hàng -->
   <div class="scr" id="shop" hidden>
-    <div class="chip abs" id="shopStars" style="left:2.6rem; top:1.4rem; font-size:3.6rem;"></div>
-    <div class="girlbox" id="shopGirl" style="left:2rem; top:7rem; width:24rem; height:39rem;"></div>
+    <div class="room" id="shopRoom"></div>
+    <div class="chip abs" id="shopStars" style="left:3rem; top:2.8rem; font-size:3.2rem;"></div>
     <div class="trylabel" id="tryLabel"></div>
-    <div class="btn small ink f abs" id="shopBack" style="left:3rem; top:50.6rem; width:19rem; padding-left:0; padding-right:0;">◀ Về nhà</div>
-    <div class="bubble" id="shopBubble" style="left:31rem; top:0.8rem; width:62rem; height:5.6rem; padding:0.5rem 2.4rem; font-size:2.4rem; line-height:1.15; overflow:hidden;"></div>
-    <div class="tabs" id="tabs"></div>
+    <div class="btn small ink f abs" id="shopBack" style="left:3rem; top:49.4rem;">◀ Về nhà</div>
+    <div class="bubble" id="shopBubble" style="left:47rem; top:0.8rem; width:46.6rem; height:5.4rem; padding:0.5rem 2.2rem; font-size:2.3rem; line-height:1.15; overflow:hidden;"></div>
+    <div id="tabs"></div>
     <div class="grid" id="grid"></div>
   </div>
 
   <!-- Thông báo đúng / sai -->
   <div class="ov" id="fb" hidden>
-    <div class="fb-emoji" id="fbEmoji"></div>
+    <div class="fb-face" id="fbFace"></div>
     <div class="fb-big" id="fbText"></div>
     <div class="fb-sub" id="fbSub"></div>
     <div class="fb-delta" id="fbDelta"></div>
@@ -205,7 +209,8 @@ body {
 
   /* ================= Đồ trong cửa hàng ================= */
   var TIER = { 1: 'Vừa', 2: 'Đẹp', 3: 'Sang trọng' };
-  var CATS = [['toc', 'Tóc'], ['ao', 'Áo'], ['quan', 'Quần'], ['vay', 'Váy'], ['giay', 'Giày'], ['pk', 'Phụ kiện']];
+  var CATS = [['toc', 'Tóc'], ['ao', 'Áo'], ['quan', 'Quần'], ['vay', 'Váy'], ['giay', 'Giày'], ['pk', 'Phụ kiện'], ['noi', 'Nội thất'], ['trang', 'Trang trí']];
+  var ROOM_SLOTS = { bed: 1, wardrobe: 1, vanity: 1, stool: 1, rug: 1, curtain: 1, picture: 1, lamp: 1, toy: 1 };
   function I(id, cat, slot, tier, name, st) { return { id: id, cat: cat, slot: slot, tier: tier, price: tier, name: name, st: st }; }
   var ITEMS = [
     I('h0', '', 'hair', 0, 'Tóc ngắn đen', { s: 'bob', c: '#4a3030' }),
@@ -255,13 +260,32 @@ body {
     I('a5', 'pk', 'handR', 2, 'Túi xách hồng', { k: 'bag', f: '#ff8cc0' }),
     I('a6', 'pk', 'head', 3, 'Vương miện', { k: 'crown', sp: 1 }),
     I('a7', 'pk', 'neck', 3, 'Vòng ngọc trai', { k: 'pearls', sp: 1 }),
-    I('a8', 'pk', 'handL', 3, 'Đũa phép', { k: 'wand', sp: 1 })
+    I('a8', 'pk', 'handL', 3, 'Đũa phép', { k: 'wand', sp: 1 }),
+
+    I('f1', 'noi', 'bed', 1, 'Giường gỗ', { k: 'wood' }),
+    I('f2', 'noi', 'bed', 2, 'Giường hồng', { k: 'pink' }),
+    I('f3', 'noi', 'bed', 3, 'Giường công chúa', { k: 'princess', sp: 1 }),
+    I('f4', 'noi', 'wardrobe', 1, 'Tủ quần áo gỗ', { k: 'wood' }),
+    I('f5', 'noi', 'wardrobe', 2, 'Tủ quần áo hồng', { k: 'pink' }),
+    I('f6', 'noi', 'wardrobe', 3, 'Tủ công chúa', { k: 'princess', sp: 1 }),
+    I('f7', 'noi', 'vanity', 2, 'Bàn trang điểm', { k: 'white' }),
+    I('f8', 'noi', 'vanity', 3, 'Bàn phấn công chúa', { k: 'princess', sp: 1 }),
+
+    I('d1', 'trang', 'stool', 1, 'Ghế đôn gỗ', { k: 'wood' }),
+    I('d2', 'trang', 'stool', 2, 'Ghế nhung hồng', { k: 'pink' }),
+    I('d3', 'trang', 'rug', 1, 'Thảm tròn', { k: 'round' }),
+    I('d4', 'trang', 'rug', 2, 'Thảm cầu vồng', { k: 'rainbow' }),
+    I('d5', 'trang', 'curtain', 1, 'Rèm cửa hoa', { k: 'flower' }),
+    I('d6', 'trang', 'picture', 2, 'Tranh cầu vồng', { k: 'rainbow' }),
+    I('d7', 'trang', 'lamp', 3, 'Đèn chùm pha lê', { k: 'crystal', sp: 1 }),
+    I('d8', 'trang', 'toy', 1, 'Gấu bông', { k: 'bear' })
   ];
   var BYID = {};
   for (var ii = 0; ii < ITEMS.length; ii++) BYID[ITEMS[ii].id] = ITEMS[ii];
   var DEFAULT = { hair: 'h0', top: 't0', bottom: 'p0', shoes: 'g0' };
+  function isRoom(it) { return !!ROOM_SLOTS[it.slot]; }
 
-  /* ================= Vẽ bé gái (SVG) ================= */
+  /* ================= Vẽ (SVG) ================= */
   var SK = '#ffd9c0', OL = ' stroke="#4a2c5e" stroke-opacity=".18" stroke-width="2"';
   var uid = 0;
   function Painter() { this.defs = []; this.n = 0; this.pid = 'g' + (uid++); }
@@ -274,10 +298,12 @@ body {
       return s + '</linearGradient>';
     }
     if (a[0] === 'dots') d = '<pattern id="' + id + '" patternUnits="userSpaceOnUse" width="16" height="16"><rect width="16" height="16" fill="' + a[1] + '"/><circle cx="4" cy="4" r="3" fill="' + a[2] + '"/><circle cx="12" cy="12" r="3" fill="' + a[2] + '"/></pattern>';
+    else if (a[0] === 'smalldots') d = '<pattern id="' + id + '" patternUnits="userSpaceOnUse" width="20" height="20"><rect width="20" height="20" fill="' + a[1] + '"/><circle cx="5" cy="5" r="2" fill="' + a[2] + '"/><circle cx="15" cy="15" r="2" fill="' + a[2] + '"/></pattern>';
     else if (a[0] === 'stripes') d = '<pattern id="' + id + '" patternUnits="userSpaceOnUse" width="14" height="14"><rect width="14" height="14" fill="' + a[1] + '"/><rect width="14" height="7" fill="' + a[2] + '"/></pattern>';
     else if (a[0] === 'gold') d = grad([[0, '#ffe680'], [0.35, '#f5b700'], [0.6, '#ffe9a0'], [1, '#e0a000']]);
     else if (a[0] === 'crystal') d = grad([[0, '#d8f3ff'], [0.4, '#9fdcff'], [0.6, '#ffffff'], [1, '#b9e6ff']]);
     else if (a[0] === 'silver') d = grad([[0, '#f2f2f7'], [0.45, '#c9cbd6'], [0.6, '#ffffff'], [1, '#b8bac8']]);
+    else if (a[0] === 'sky') d = grad([[0, '#a8deff'], [1, '#e9f8ff']], true);
     else if (a[0] === 'rainbow') {
       var c = ['#ff8a8a', '#ffc078', '#ffe680', '#9be7a5', '#8cc8ff', '#c3a6ff'], st = [];
       for (var k = 0; k < c.length; k++) { st.push([k / c.length, c[k]]); st.push([(k + 1) / c.length, c[k]]); }
@@ -300,7 +326,10 @@ body {
       ' C' + (cx + s * 0.6) + ',' + (cy - s * 1.3) + ' ' + (cx + s * 1.6) + ',' + (cy - s * 0.2) + ' ' + cx + ',' + (cy + s * 0.9) + ' Z';
   }
   function path(d, fill, extra) { return '<path d="' + d + '" fill="' + fill + '"' + (extra || '') + '/>'; }
+  function rect(x, y, w, h, rx, fill, extra) { return '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" rx="' + rx + '" fill="' + fill + '"' + (extra || '') + '/>'; }
+  function circ(x, y, r, fill, extra) { return '<circle cx="' + x + '" cy="' + y + '" r="' + r + '" fill="' + fill + '"' + (extra || '') + '/>'; }
 
+  /* ---- Bé gái ---- */
   var CAP = 'M46,96 Q46,36 100,36 Q154,36 154,96 Z';
   function hairBack(st, P) {
     var c = P.p(st.c), s = st.s;
@@ -309,22 +338,22 @@ body {
     if (s === 'pony') return path(CAP, c) + path('M136,54 Q198,64 178,180 Q166,142 146,110 Z', c, OL);
     if (s === 'wavy') return path('M42,94 Q42,32 100,32 Q158,32 158,94 L164,204 Q152,220 140,204 Q128,220 116,204 L84,204 Q72,220 60,204 Q48,220 36,204 Z', c, OL);
     if (s === 'princess') return path('M42,94 Q42,30 100,30 Q158,30 158,94 L166,228 Q100,244 34,228 Z', c, OL);
-    if (s === 'bun') return path(CAP, c) + '<circle cx="100" cy="30" r="24" fill="' + c + '"' + OL + '/>';
+    if (s === 'bun') return path(CAP, c) + circ(100, 30, 24, c, OL);
     return '';
   }
   function hairFront(st, P) {
     var c = P.p(st.c), s = st.s, h;
     var side = (s === 'princess' || s === 'wavy');
     h = path(side ? 'M48,96 Q48,34 100,32 Q152,34 152,96 Q142,58 106,60 Q74,62 48,96 Z' : 'M50,92 Q52,38 100,36 Q148,38 150,92 Q134,66 114,70 Q100,58 86,70 Q66,66 50,92 Z', c, OL);
-    if (s === 'pig') h += '<circle cx="50" cy="96" r="8" fill="' + st.tie + '"/><circle cx="150" cy="96" r="8" fill="' + st.tie + '"/>';
-    if (s === 'pony') h += '<circle cx="142" cy="58" r="8" fill="' + st.tie + '"/>';
+    if (s === 'pig') h += circ(50, 96, 8, st.tie) + circ(150, 96, 8, st.tie);
+    if (s === 'pony') h += circ(142, 58, 8, st.tie);
     if (s === 'bun') h += '<path d="M80,46 Q100,58 120,46" stroke="' + st.tie + '" stroke-width="6" fill="none" stroke-linecap="round"/>';
     if (st.sp) h += sparks(s === 'princess' ? [[62, 58, 7], [140, 70, 6], [156, 180, 7], [44, 206, 6]] : [[100, 22, 7], [62, 60, 6], [138, 62, 6]]);
     return h;
   }
   function topW(st, P) {
     var f = P.p(st.f), h = '';
-    if (st.sl === 'puff') h += '<circle cx="68" cy="172" r="17" fill="' + f + '"' + OL + '/><circle cx="132" cy="172" r="17" fill="' + f + '"' + OL + '/>';
+    if (st.sl === 'puff') h += circ(68, 172, 17, f, OL) + circ(132, 172, 17, f, OL);
     else h += path('M76,158 Q58,160 50,196 L70,203 Q74,184 84,170 Z', f, OL) + path('M124,158 Q142,160 150,196 L130,203 Q126,184 116,170 Z', f, OL);
     h += path('M70,158 Q100,150 130,158 L138,252 Q100,258 62,252 Z', f, OL);
     h += path('M88,153 Q100,170 112,153 Z', SK);
@@ -342,7 +371,7 @@ body {
     else if (k === 'tier') h = path('M54,278 Q100,286 146,278 L158,314 Q100,324 42,314 Z', P.p(st.f2), OL) + path('M66,242 L134,242 L146,282 Q100,290 54,282 Z', f, OL);
     else if (k === 'gown') h = path('M66,242 L134,242 L170,344 Q100,360 30,344 Z', f, OL);
     if (k === 'overall') h += path('M80,196 L120,196 L124,252 L76,252 Z', f, OL) + '<path d="M82,198 L80,158 M118,198 L120,158" stroke="' + f + '" stroke-width="7" stroke-linecap="round"/>' +
-      '<circle cx="85" cy="205" r="4" fill="' + st.tr + '"/><circle cx="115" cy="205" r="4" fill="' + st.tr + '"/>';
+      circ(85, 205, 4, st.tr) + circ(115, 205, 4, st.tr);
     if (k === 'long' && st.tr) h += '<path d="M64,250 L136,250" stroke="' + st.tr + '" stroke-width="4"/>';
     if (k === 'gown') h += '<path d="M66,248 L134,248" stroke="' + st.tr + '" stroke-width="6"/><path d="M33,342 Q100,358 167,342" stroke="' + st.tr + '" stroke-width="5" fill="none"/>';
     if (st.sp) h += sparks(k === 'gown' ? [[70, 300, 7], [126, 322, 7], [100, 274, 5], [48, 336, 5], [150, 334, 5]] : [[80, 300, 6], [120, 320, 6], [100, 266, 5]]);
@@ -352,12 +381,12 @@ body {
     var f = P.p(st.f), f2 = st.f2 ? P.p(st.f2) : f, h = '', xs = [86, 114];
     for (var i = 0; i < 2; i++) {
       var x = xs[i], shape = 'M' + (x - 15) + ',368 Q' + (x - 16) + ',350 ' + x + ',350 Q' + (x + 15) + ',350 ' + (x + 15) + ',368 Z';
-      if (st.k === 'sandal') h += '<ellipse cx="' + x + '" cy="361" rx="12" ry="7" fill="' + SK + '"/><rect x="' + (x - 15) + '" y="365" width="30" height="5" rx="2" fill="' + f + '"/><path d="M' + (x - 10) + ',359 L' + (x + 10) + ',359" stroke="' + f + '" stroke-width="4" stroke-linecap="round"/>';
-      else if (st.k === 'boot') h += '<rect x="' + (x - 13) + '" y="322" width="26" height="40" rx="6" fill="' + f + '"' + OL + '/>' + path(shape, f, OL) + '<rect x="' + (x - 16) + '" y="364" width="32" height="6" rx="3" fill="' + f2 + '"/>';
+      if (st.k === 'sandal') h += '<ellipse cx="' + x + '" cy="361" rx="12" ry="7" fill="' + SK + '"/>' + rect(x - 15, 365, 30, 5, 2, f) + '<path d="M' + (x - 10) + ',359 L' + (x + 10) + ',359" stroke="' + f + '" stroke-width="4" stroke-linecap="round"/>';
+      else if (st.k === 'boot') h += rect(x - 13, 322, 26, 40, 6, f, OL) + path(shape, f, OL) + rect(x - 16, 364, 32, 6, 3, f2);
       else {
         h += path(shape, f, OL);
-        if (st.k === 'sneaker') h += '<rect x="' + (x - 16) + '" y="364" width="32" height="6" rx="3" fill="' + f2 + '"/><path d="M' + (x - 6) + ',356 L' + (x + 6) + ',356" stroke="' + f2 + '" stroke-width="3"/>';
-        if (st.k === 'flat') h += '<circle cx="' + x + '" cy="354" r="4.5" fill="' + f2 + '"/>';
+        if (st.k === 'sneaker') h += rect(x - 16, 364, 32, 6, 3, f2) + '<path d="M' + (x - 6) + ',356 L' + (x + 6) + ',356" stroke="' + f2 + '" stroke-width="3"/>';
+        if (st.k === 'flat') h += circ(x, 354, 4.5, f2);
       }
       if (st.sp) h += spk(x + 6, 352, 5, i * 0.6);
     }
@@ -365,58 +394,172 @@ body {
   }
   function accW(st, P) {
     var k = st.k, h = '';
-    if (k === 'bow') h = path('M140,52 L120,38 L122,66 Z M140,52 L160,38 L158,66 Z', st.f, OL) + '<circle cx="140" cy="52" r="6" fill="' + st.f + '"' + OL + '/>';
+    if (k === 'bow') h = path('M140,52 L120,38 L122,66 Z M140,52 L160,38 L158,66 Z', st.f, OL) + circ(140, 52, 6, st.f, OL);
     else if (k === 'star') h = '<polygon points="' + starPts(62, 58, 14, 6) + '" fill="' + st.f + '" stroke="#e0a800" stroke-width="2"/>';
     else if (k === 'flowers') {
       h = '<path d="M54,74 Q100,22 146,74" stroke="#7bd389" stroke-width="6" fill="none" stroke-linecap="round"/>';
       var fl = [[66, 54, '#ff8cc0'], [100, 42, '#ffd84d'], [134, 54, '#b89cff']];
       for (var i = 0; i < 3; i++) {
-        for (var j = 0; j < 5; j++) { var a = j * 2 * Math.PI / 5; h += '<circle cx="' + (fl[i][0] + 6 * Math.cos(a)).toFixed(1) + '" cy="' + (fl[i][1] + 6 * Math.sin(a)).toFixed(1) + '" r="5" fill="' + fl[i][2] + '"/>'; }
-        h += '<circle cx="' + fl[i][0] + '" cy="' + fl[i][1] + '" r="3.5" fill="#fff6b0"/>';
+        for (var j = 0; j < 5; j++) { var a = j * 2 * Math.PI / 5; h += circ((fl[i][0] + 6 * Math.cos(a)).toFixed(1), (fl[i][1] + 6 * Math.sin(a)).toFixed(1), 5, fl[i][2]); }
+        h += circ(fl[i][0], fl[i][1], 3.5, '#fff6b0');
       }
     }
     else if (k === 'crown') h = path('M70,46 L72,18 L86,34 L100,12 L114,34 L128,18 L130,46 Z', P.p('gold'), ' stroke="#d99a00" stroke-width="2"') +
-      '<circle cx="100" cy="36" r="4.5" fill="#ff4f8b"/><circle cx="84" cy="40" r="3.2" fill="#4fc3ff"/><circle cx="116" cy="40" r="3.2" fill="#4fc3ff"/>' + sparks([[66, 16, 6], [134, 14, 6]]);
+      circ(100, 36, 4.5, '#ff4f8b') + circ(84, 40, 3.2, '#4fc3ff') + circ(116, 40, 3.2, '#4fc3ff') + sparks([[66, 16, 6], [134, 14, 6]]);
     else if (k === 'glasses') h = '<path d="' + heart(82, 100, 12) + '" fill="#ff7eb6" fill-opacity=".35" stroke="#ff3d7f" stroke-width="3"/><path d="' + heart(118, 100, 12) + '" fill="#ff7eb6" fill-opacity=".35" stroke="#ff3d7f" stroke-width="3"/><path d="M94,96 Q100,92 106,96" stroke="#ff3d7f" stroke-width="3" fill="none"/>';
     else if (k === 'pearls') {
       for (var t = 0; t <= 10; t++) {
         var u = t / 10, x = (1 - u) * (1 - u) * 80 + 2 * (1 - u) * u * 100 + u * u * 120, y = (1 - u) * (1 - u) * 150 + 2 * (1 - u) * u * 184 + u * u * 150;
-        h += '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="4" fill="#ffffff" stroke="#cfc3dc" stroke-width="1.2"/>';
+        h += circ(x.toFixed(1), y.toFixed(1), 4, '#ffffff', ' stroke="#cfc3dc" stroke-width="1.2"');
       }
       h += sparks([[100, 176, 5]]);
     }
-    else if (k === 'bag') h = '<path d="M146,236 Q160,224 168,252" stroke="#c2457e" stroke-width="3" fill="none"/><rect x="140" y="248" width="34" height="28" rx="7" fill="' + st.f + '"' + OL + '/>' +
-      '<path d="M141,250 L173,250 L157,265 Z" fill="#ff5fa2"/><circle cx="157" cy="263" r="3" fill="#ffd84d"/>';
+    else if (k === 'bag') h = '<path d="M146,236 Q160,224 168,252" stroke="#c2457e" stroke-width="3" fill="none"/>' + rect(140, 248, 34, 28, 7, st.f, OL) +
+      path('M141,250 L173,250 L157,265 Z', '#ff5fa2') + circ(157, 263, 3, '#ffd84d');
     else if (k === 'wand') h = '<path d="M51,240 L26,196" stroke="#a0662f" stroke-width="5" stroke-linecap="round"/><polygon points="' + starPts(24, 190, 15, 7) + '" fill="' + P.p('gold') + '" stroke="#d99a00" stroke-width="2"/>' +
       sparks([[10, 174, 6], [42, 172, 5], [12, 208, 5]]);
     return h;
   }
   function face(mood) {
-    var m = mood === 'happy' ? '<path d="M89,117 Q100,134 111,117 Z" fill="#c2456b"/>' : '<path d="M92,119 Q100,128 108,119" stroke="#c2456b" stroke-width="3" fill="none" stroke-linecap="round"/>';
+    var m;
+    if (mood === 'happy') m = path('M89,117 Q100,134 111,117 Z', '#c2456b');
+    else if (mood === 'sad') m = '<path d="M91,126 Q100,117 109,126" stroke="#c2456b" stroke-width="3.5" fill="none" stroke-linecap="round"/>' + path('M128,108 Q124,118 128,121 Q132,118 128,108 Z', '#7cc8ff');
+    else m = '<path d="M92,119 Q100,128 108,119" stroke="#c2456b" stroke-width="3" fill="none" stroke-linecap="round"/>';
     return '<ellipse cx="82" cy="100" rx="7" ry="9" fill="#3a2346"/><ellipse cx="118" cy="100" rx="7" ry="9" fill="#3a2346"/>' +
-      '<circle cx="84.5" cy="96.5" r="2.6" fill="#fff"/><circle cx="120.5" cy="96.5" r="2.6" fill="#fff"/>' +
+      circ(84.5, 96.5, 2.6, '#fff') + circ(120.5, 96.5, 2.6, '#fff') +
       '<ellipse cx="70" cy="116" rx="8" ry="5" fill="#ff9fb8" opacity=".65"/><ellipse cx="130" cy="116" rx="8" ry="5" fill="#ff9fb8" opacity=".65"/>' + m;
   }
-  // o: slot -> item
-  function girlSVG(o, vb, mood) {
-    var P = new Painter(), s = [];
+  function girlInner(o, mood, P) {
+    var s = [];
     s.push(hairBack(o.hair.st, P));
     s.push('<path d="M89,246 L87,358 M111,246 L113,358" stroke="' + SK + '" stroke-width="17" stroke-linecap="round" fill="none"/>');
     s.push(shoesW(o.shoes.st, P));
     s.push('<path d="M74,166 L52,236 M126,166 L148,236" stroke="' + SK + '" stroke-width="15" stroke-linecap="round" fill="none"/>');
-    s.push('<rect x="91" y="128" width="18" height="30" rx="6" fill="' + SK + '"/>');
+    s.push(rect(91, 128, 18, 30, 6, SK));
     s.push(topW(o.top.st, P));
     s.push(bottomW(o.bottom.st, P));
-    s.push('<circle cx="51" cy="242" r="10" fill="' + SK + '"/><circle cx="149" cy="242" r="10" fill="' + SK + '"/>');
+    s.push(circ(51, 242, 10, SK) + circ(149, 242, 10, SK));
     if (o.neck) s.push(accW(o.neck.st, P));
-    s.push('<circle cx="100" cy="92" r="50" fill="' + SK + '"/>');
+    s.push(circ(100, 92, 50, SK));
     s.push(face(mood));
     s.push(hairFront(o.hair.st, P));
     if (o.head) s.push(accW(o.head.st, P));
     if (o.face) s.push(accW(o.face.st, P));
     if (o.handL) s.push(accW(o.handL.st, P));
     if (o.handR) s.push(accW(o.handR.st, P));
-    return '<svg viewBox="' + (vb || '0 0 200 400') + '" preserveAspectRatio="xMidYMid meet"><defs>' + P.defs.join('') + '</defs>' + s.join('') + '</svg>';
+    return s.join('');
+  }
+  function wrap(P, vb, body) { return '<svg viewBox="' + vb + '" preserveAspectRatio="xMidYMid meet"><defs>' + P.defs.join('') + '</defs>' + body + '</svg>'; }
+  function girlSVG(o, vb, mood) { var P = new Painter(); return wrap(P, vb || '0 0 200 400', girlInner(o, mood, P)); }
+
+  /* ---- Phòng (viewBox 300 x 390) ---- */
+  function miniClothes(it, cx, y, P) {
+    var f = P.p(it.st.f), h = '<path d="M' + (cx - 6) + ',' + y + ' L' + cx + ',' + (y - 4) + ' L' + (cx + 6) + ',' + y + '" stroke="#9a8aa6" stroke-width="1.5" fill="none"/>';
+    if (it.slot === 'top') h += path('M' + (cx - 8) + ',' + (y + 4) + ' L' + (cx - 3) + ',' + y + ' L' + (cx + 3) + ',' + y + ' L' + (cx + 8) + ',' + (y + 4) + ' L' + (cx + 6) + ',' + (y + 9) + ' L' + (cx + 4) + ',' + (y + 8) + ' L' + (cx + 4) + ',' + (y + 24) + ' L' + (cx - 4) + ',' + (y + 24) + ' L' + (cx - 4) + ',' + (y + 8) + ' L' + (cx - 6) + ',' + (y + 9) + ' Z', f, OL);
+    else h += path('M' + (cx - 5) + ',' + y + ' L' + (cx + 5) + ',' + y + ' L' + (cx + 8) + ',' + (y + 22) + ' L' + (cx - 8) + ',' + (y + 22) + ' Z', f, OL);
+    return h;
+  }
+  function wardrobeW(st, P) {
+    var body = st.k === 'wood' ? '#c98b55' : (st.k === 'pink' ? '#ffb3d1' : '#fffaf2');
+    var trim = st.k === 'wood' ? '#8a5530' : (st.k === 'pink' ? '#ff7eb6' : '#e0b030');
+    var h = rect(2, 104, 78, 12, 4, trim) + rect(6, 112, 70, 188, 6, body, ' stroke="' + trim + '" stroke-width="3"');
+    // ngăn mở bên phải, có quần áo đã mua
+    h += rect(42, 118, 30, 174, 3, '#fff3f8') + '<path d="M44,128 L70,128" stroke="#b9a8c4" stroke-width="2"/>' + '<path d="M42,212 L72,212" stroke="' + trim + '" stroke-width="3"/>';
+    var list = ownedClothes(), hung = 0, folded = 0;
+    for (var i = 0; i < list.length; i++) {
+      if (hung < 3) { h += miniClothes(list[i], 49 + hung * 8.5, 132, P); hung++; }
+      else if (folded < 6) { h += rect(46, 284 - folded * 9 - 8, 22, 7, 2, P.p(list[i].st.f), OL); folded++; }
+    }
+    h += path('M76,116 L90,124 L90,286 L76,296 Z', body, ' stroke="' + trim + '" stroke-width="2"');
+    h += rect(10, 118, 28, 174, 3, body, ' stroke="' + trim + '" stroke-width="2"');
+    if (st.k === 'pink') h += '<path d="' + heart(32, 200, 4) + '" fill="#ff5fa2"/>';
+    else h += circ(33, 200, 3.5, trim);
+    h += rect(10, 298, 8, 6, 2, trim) + rect(64, 298, 8, 6, 2, trim);
+    if (st.k === 'princess') h += '<polygon points="22,104 28,88 36,98 41,82 46,98 54,88 60,104" fill="' + P.p('gold') + '" stroke="#d99a00" stroke-width="1.5"/>' + sparks([[18, 140, 6], [30, 250, 5], [84, 180, 5]]);
+    return h;
+  }
+  function bedW(st, P) {
+    var k = st.k, wood = k === 'wood' ? '#b97a45' : (k === 'pink' ? '#ff9cc8' : '#fffaf2'), trim = k === 'princess' ? '#e0b030' : wood;
+    var blanket = k === 'wood' ? '#7cb7ff' : (k === 'pink' ? P.p('dots:#ff7eb6:#ffe0ef') : P.p('#d9c2ff'));
+    var h = '';
+    if (k === 'princess') h += '<path d="M90,150 L206,150" stroke="#e0b030" stroke-width="5" stroke-linecap="round"/>' +
+      path('M92,152 Q82,210 96,262 L108,262 Q98,206 110,152 Z', '#ffd6ea', ' opacity=".85"') + path('M204,152 Q214,210 200,262 L188,262 Q198,206 186,152 Z', '#ffd6ea', ' opacity=".85"') + circ(148, 146, 7, P.p('gold'));
+    h += rect(84, k === 'princess' ? 196 : 212, 14, k === 'princess' ? 102 : 86, 6, wood, ' stroke="' + trim + '" stroke-width="3"');
+    if (k === 'pink') h += '<path d="' + heart(91, 210, 10) + '" fill="#ff5fa2"/>';
+    h += rect(94, 252, 112, 20, 7, '#ffffff', OL);
+    h += '<ellipse cx="112" cy="250" rx="15" ry="8" fill="#ffffff"' + OL + '/>';
+    h += rect(128, 247, 78, 28, 8, blanket, OL);
+    if (k === 'princess') h += '<path d="M128,252 L206,252" stroke="#e0b030" stroke-width="3"/>';
+    h += rect(200, 236, 11, 62, 5, wood, ' stroke="' + trim + '" stroke-width="3"') + rect(98, 272, 7, 28, 2, wood) + rect(192, 272, 7, 28, 2, wood);
+    if (st.sp) h += sparks([[160, 236, 6], [118, 200, 5], [196, 190, 5]]);
+    return h;
+  }
+  function vanityW(st, P) {
+    var pr = st.k === 'princess', body = pr ? '#fffaf2' : '#ffffff', trim = pr ? '#e0b030' : '#e3cfe6', h = '';
+    h += '<ellipse cx="254" cy="166" rx="30" ry="38" fill="' + (pr ? P.p('gold') : body) + '" stroke="' + trim + '" stroke-width="3"/>' +
+      '<ellipse cx="254" cy="166" rx="23" ry="31" fill="' + P.p('sky') + '"/>' + '<path d="M242,150 L250,142 M244,162 L258,148" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>';
+    if (pr) { for (var i = 0; i < 7; i++) { var a = Math.PI * (0.15 + 0.7 * i / 6) + Math.PI; h += circ((254 + 36 * Math.cos(a)).toFixed(1), (166 + 44 * Math.sin(a)).toFixed(1), 3.2, '#fff6b0', ' stroke="#e0b030" stroke-width="1"'); } }
+    h += rect(212, 204, 86, 12, 4, body, ' stroke="' + trim + '" stroke-width="2.5"') + rect(218, 216, 74, 30, 4, body, ' stroke="' + trim + '" stroke-width="2.5"') +
+      '<path d="M255,218 L255,244" stroke="' + trim + '" stroke-width="2"/>' + circ(244, 231, 2.5, trim) + circ(266, 231, 2.5, trim) +
+      rect(222, 246, 6, 54, 2, body, ' stroke="' + trim + '" stroke-width="2"') + rect(282, 246, 6, 54, 2, body, ' stroke="' + trim + '" stroke-width="2"');
+    h += rect(220, 190, 8, 14, 3, '#ff8cc0') + rect(231, 194, 7, 10, 3, '#b89cff') + circ(286, 198, 6, '#ffd84d');
+    if (pr) h += sparks([[226, 130, 6], [286, 136, 5], [254, 118, 5]]);
+    return h;
+  }
+  function stoolW(st, P) {
+    var pink = st.k === 'pink', leg = pink ? '#e0b030' : '#a0662f';
+    return rect(240, 290, 5, 30, 2, leg) + rect(272, 290, 5, 30, 2, leg) + rect(256, 292, 5, 30, 2, leg) +
+      '<ellipse cx="258" cy="290" rx="24" ry="9" fill="' + (pink ? '#ff8cc0' : '#c98b55') + '"' + OL + '/>' + (pink ? circ(250, 289, 1.6, '#ffffff') + circ(258, 291, 1.6, '#ffffff') + circ(266, 289, 1.6, '#ffffff') : '');
+  }
+  function rugW(st, P) {
+    if (st.k === 'rainbow') {
+      var c = ['#ff9a9a', '#ffc078', '#ffe680', '#9be7a5', '#8cc8ff', '#c3a6ff'], h = '';
+      for (var i = 0; i < c.length; i++) h += '<ellipse cx="150" cy="350" rx="' + (120 - i * 17) + '" ry="' + (31 - i * 4.4).toFixed(1) + '" fill="' + c[i] + '"/>';
+      return h;
+    }
+    return '<ellipse cx="150" cy="350" rx="118" ry="30" fill="#9fd8ff"/><ellipse cx="150" cy="350" rx="96" ry="22" fill="none" stroke="#ffffff" stroke-width="3" stroke-dasharray="6 6"/>';
+  }
+  function curtainW(st, P) {
+    var f = P.p('dots:#ff9cc8:#ffffff');
+    return path('M54,40 Q72,44 80,44 Q68,100 84,150 L54,150 Z', f, OL) + path('M166,40 Q148,44 140,44 Q152,100 136,150 L166,150 Z', f, OL) +
+      rect(50, 32, 120, 12, 6, '#ff7eb6') + circ(66, 110, 4, '#ffd84d') + circ(154, 110, 4, '#ffd84d');
+  }
+  function pictureW(st, P) {
+    var c = ['#ff8a8a', '#ffc078', '#ffe680', '#9be7a5', '#8cc8ff'], h = rect(184, 58, 54, 44, 4, '#ffffff', ' stroke="#c9a8ff" stroke-width="4"');
+    for (var i = 0; i < c.length; i++) h += '<path d="M' + (194 + i * 3) + ',96 A' + (17 - i * 3) + ',' + (17 - i * 3) + ' 0 0 1 ' + (228 - i * 3) + ',96" stroke="' + c[i] + '" stroke-width="3" fill="none"/>';
+    return h + circ(229, 68, 4, '#ffd84d');
+  }
+  function lampW(st, P) {
+    var h = circ(250, 40, 42, '#fff6b0', ' opacity=".35"') + '<path d="M250,0 L250,24" stroke="#c9a8a0" stroke-width="2"/>' + path('M228,24 L272,24 L262,40 L238,40 Z', P.p('gold'), ' stroke="#d99a00" stroke-width="1.5"');
+    for (var i = 0; i < 5; i++) h += path('M' + (234 + i * 8) + ',42 L' + (237 + i * 8) + ',50 L' + (234 + i * 8) + ',58 L' + (231 + i * 8) + ',50 Z', P.p('crystal'), ' stroke="#9fdcff" stroke-width="1"');
+    return h + sparks([[222, 52, 5], [280, 30, 5], [250, 66, 4]]);
+  }
+  function toyW(st, P) {
+    var b = '#c98b55', l = '#e8b98a';
+    return circ(24, 330, 6, b) + circ(46, 330, 6, b) + '<ellipse cx="35" cy="352" rx="15" ry="16" fill="' + b + '"/>' + circ(35, 334, 12, b) +
+      '<ellipse cx="35" cy="355" rx="8" ry="9" fill="' + l + '"/>' + circ(31, 332, 1.8, '#3a2346') + circ(39, 332, 1.8, '#3a2346') + '<ellipse cx="35" cy="338" rx="4" ry="3" fill="' + l + '"/>' + circ(35, 337, 1.4, '#3a2346') +
+      circ(22, 362, 5, b) + circ(48, 362, 5, b) + path('M30,322 L35,316 L40,322 Z', '#ff5fa2');
+  }
+  function roomSVG(furn, girl, vb, mood) {
+    var P = new Painter(), h = '';
+    h += rect(0, 0, 300, 262, 0, P.p('smalldots:#ffe6f1:#ffd3e6'));
+    h += rect(0, 256, 300, 8, 0, '#ffffff') + rect(0, 262, 300, 128, 0, '#f3cf9f');
+    for (var y = 284; y < 390; y += 24) h += '<path d="M0,' + y + ' L300,' + y + '" stroke="#e3b984" stroke-width="2"/>';
+    // cửa sổ luôn có
+    h += rect(64, 44, 92, 98, 6, '#ffffff', OL) + rect(70, 50, 80, 86, 3, P.p('sky')) +
+      '<ellipse cx="96" cy="78" rx="14" ry="7" fill="#ffffff"/><ellipse cx="108" cy="74" rx="10" ry="7" fill="#ffffff"/>' + circ(136, 64, 7, '#ffe680') +
+      '<path d="M110,50 L110,136 M70,93 L150,93" stroke="#ffffff" stroke-width="4"/>' + rect(58, 140, 104, 8, 3, '#ffffff', OL);
+    if (furn.curtain) h += curtainW(furn.curtain.st, P);
+    if (furn.picture) h += pictureW(furn.picture.st, P);
+    if (furn.lamp) h += lampW(furn.lamp.st, P);
+    if (furn.wardrobe) h += wardrobeW(furn.wardrobe.st, P);
+    if (furn.vanity) h += vanityW(furn.vanity.st, P);
+    if (furn.bed) h += bedW(furn.bed.st, P);
+    if (furn.rug) h += rugW(furn.rug.st, P);
+    if (furn.stool) h += stoolW(furn.stool.st, P);
+    if (furn.toy) h += toyW(furn.toy.st, P);
+    if (girl) h += '<g transform="translate(104,202) scale(0.46)">' + girlInner(girl, mood, P) + '</g>';
+    return wrap(P, vb || '0 0 300 390', h);
   }
   function cropFor(it) {
     var s = it.slot, k = it.st.k;
@@ -429,11 +572,20 @@ body {
     if (s === 'neck') return '64 130 72 62';
     if (s === 'handR') return '124 218 60 66';
     if (s === 'handL') return '4 168 64 86';
+    if (s === 'bed') return '76 140 144 166';
+    if (s === 'wardrobe') return '0 78 96 230';
+    if (s === 'vanity') return '204 118 100 188';
+    if (s === 'stool') return '226 274 64 52';
+    if (s === 'rug') return '26 314 248 72';
+    if (s === 'curtain') return '44 26 132 128';
+    if (s === 'picture') return '176 50 70 60';
+    if (s === 'lamp') return '204 0 92 90';
+    if (s === 'toy') return '8 304 54 68';
     return '0 0 200 400';
   }
 
   /* ================= Lưu dữ liệu ================= */
-  var S = { h: 0, own: {}, wear: { hair: 'h0', top: 't0', bottom: 'p0', shoes: 'g0' } };
+  var S = { h: 0, own: {}, wear: { hair: 'h0', top: 't0', bottom: 'p0', shoes: 'g0' }, zoom: 100 };
   function load() {
     var raw = '';
     try { if (window.Android && window.Android.load) raw = window.Android.load() || ''; } catch (e) {}
@@ -442,6 +594,7 @@ body {
     try {
       var d = JSON.parse(raw);
       if (typeof d.h === 'number') S.h = Math.max(0, d.h);
+      if (typeof d.zoom === 'number') S.zoom = d.zoom;
       if (d.own) S.own = d.own;
       if (d.wear) for (var k in d.wear) if (d.wear.hasOwnProperty(k)) S.wear[k] = d.wear[k];
     } catch (e) {}
@@ -451,12 +604,25 @@ body {
     try { window.localStorage.setItem('behoc', raw); } catch (e) {}
     try { if (window.Android && window.Android.save) window.Android.save(raw); } catch (e) {}
   }
+  // extra: món đang thử (quần áo hoặc đồ đạc)
   function outfit(extra) {
     var o = {}, k;
-    for (k in S.wear) if (S.wear.hasOwnProperty(k) && S.wear[k] && BYID[S.wear[k]]) o[k] = BYID[S.wear[k]];
-    if (extra) o[extra.slot] = extra;
+    for (k in S.wear) if (S.wear.hasOwnProperty(k) && !ROOM_SLOTS[k] && S.wear[k] && BYID[S.wear[k]]) o[k] = BYID[S.wear[k]];
+    if (extra && !isRoom(extra)) o[extra.slot] = extra;
     return o;
   }
+  function furniture(extra) {
+    var o = {}, k;
+    for (k in ROOM_SLOTS) if (S.wear[k] && BYID[S.wear[k]]) o[k] = BYID[S.wear[k]];
+    if (extra && isRoom(extra)) o[extra.slot] = extra;
+    return o;
+  }
+  function ownedClothes() {
+    var r = [];
+    for (var i = ITEMS.length - 1; i >= 0; i--) { var it = ITEMS[i]; if ((it.slot === 'top' || it.slot === 'bottom') && S.own[it.id] && S.wear[it.slot] !== it.id) r.push(it); }
+    return r;
+  }
+  function drawRoom(el, extra, mood) { $(el).innerHTML = roomSVG(furniture(extra), outfit(extra), null, mood || 'happy'); }
 
   /* ================= Sao ================= */
   var STAR = '<svg class="st" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7L12 17.3 5.8 20.9l1.6-7L2 9.2l7.1-.6z" fill="#ffc93c" stroke="#e09b00" stroke-width="1.5" stroke-linejoin="round"/></svg>';
@@ -468,10 +634,19 @@ body {
   function refreshStars() { $('homeStars').innerHTML = starsHTML(S.h); $('gStars').innerHTML = starsHTML(S.h); $('shopStars').innerHTML = starsHTML(S.h); }
 
   /* ================= Âm thanh ================= */
-  var ctx = null;
+  var ctx = null, kept = false;
   function ac() {
     if (!ctx) { try { ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} }
     if (ctx && ctx.state === 'suspended' && ctx.resume) ctx.resume();
+    // Giữ loa (soundbar / HDMI) luôn thức bằng một tiếng rất nhỏ không nghe thấy,
+    // để câu đọc không bị mất chữ đầu.
+    if (ctx && !kept) {
+      try {
+        var o = ctx.createOscillator(), g = ctx.createGain();
+        o.type = 'sine'; o.frequency.value = 30; g.gain.value = 0.004;
+        o.connect(g); g.connect(ctx.destination); o.start(0); kept = true;
+      } catch (e) {}
+    }
     return ctx;
   }
   function beep(freq, dur, vol, type, when, slideTo) {
@@ -494,21 +669,30 @@ body {
     beep(150, .4, .5, 'sine', 0, 40); beep(600, .35, .2, 'square', .3, 180);
   }
   function tick() { beep(1200, .04, .06); }
-  var viVoice = null;
+
+  // Đọc: gọi cb khi đọc xong (app Android báo về), có hẹn giờ dự phòng.
+  var viVoice = null, uttN = 0, pending = {};
   function pickVoice() { try { var v = speechSynthesis.getVoices(); for (var i = 0; i < v.length; i++) if (/^vi/i.test(v[i].lang)) { viVoice = v[i]; break; } } catch (e) {} }
   try { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; } catch (e) {}
-  function speak(text, rate, pitch) {
-    if (window.Android && window.Android.speak) { try { window.Android.speak(text, rate, pitch); } catch (e) {} return; }
+  function finish(id) { var p = pending[id]; if (!p) return; delete pending[id]; clearTimeout(p.t); if (p.cb) p.cb(); }
+  window.ttsDone = function (id) { finish(id); };
+  function speak(text, rate, pitch, cb) {
+    for (var k in pending) if (pending.hasOwnProperty(k)) { clearTimeout(pending[k].t); delete pending[k]; }
+    var id = 'u' + (++uttN), words = text.split(' ').length;
+    pending[id] = { cb: cb, t: setTimeout(function () { finish(id); }, 2000 + words * 520) };
+    if (window.Android && window.Android.speak2) { try { window.Android.speak2(text, rate, pitch, id); return; } catch (e) {} }
+    if (window.Android && window.Android.speak) { try { window.Android.speak(text, rate, pitch); return; } catch (e) {} }
     try {
       speechSynthesis.cancel();
       var u = new SpeechSynthesisUtterance(text);
       u.lang = 'vi-VN'; if (viVoice) u.voice = viVoice;
       u.rate = rate; u.pitch = pitch; u.volume = 1;
+      u.onend = function () { finish(id); };
       speechSynthesis.speak(u);
     } catch (e) {}
   }
-  function girlSay(t) { speak(t, 1.0, 1.6); }
-  function say(t) { speak(t, 0.92, 1.2); }
+  function girlSay(t, cb) { speak(t, 1.0, 1.6, cb); }
+  function say(t, cb) { speak(t, 0.92, 1.2, cb); }
 
   /* ================= Điều hướng bằng remote ================= */
   var screen = 'home', cur = null, locked = false;
@@ -518,8 +702,8 @@ body {
     if (el) { el.classList.add('on'); if (el._focus) el._focus(); if (!quiet) tick(); }
   }
   function rootEl() { return !$('pause').hidden ? $('pause') : $(screen); }
-  function cands(root) {
-    var all = (root || rootEl()).querySelectorAll('.f'), out = [];
+  function cands() {
+    var all = rootEl().querySelectorAll('.f'), out = [];
     for (var i = 0; i < all.length; i++) if (all[i].offsetWidth > 0) out.push(all[i]);
     return out;
   }
@@ -557,7 +741,7 @@ body {
     setCur(focusEl || cands()[0], true);
   }
   function goHome(quiet) {
-    $('homeGirl').innerHTML = girlSVG(outfit(), null, 'happy');
+    drawRoom('homeRoom');
     refreshStars();
     show('home', $('bPlay'));
     if (!quiet) girlSay('Chị ơi, em muốn mua đồ! Chị làm bài để kiếm tiền cho em mua nhé!');
@@ -565,6 +749,13 @@ body {
   bind($('bPlay'), function () { show('level', $('lvde')); say('Chọn mức chơi nhé!'); });
   bind($('bShop'), function () { openShop(); });
   bind($('lvBack'), function () { goHome(true); });
+  var ZOOMS = [100, 95, 90, 85, 80];
+  function zoomLabel() { $('bZoom').textContent = 'Cỡ màn hình ' + S.zoom + '%'; }
+  bind($('bZoom'), function () {
+    var i = ZOOMS.indexOf(S.zoom);
+    S.zoom = ZOOMS[(i + 1) % ZOOMS.length];
+    save(); zoomLabel(); layout();
+  });
 
   /* ================= Chơi ================= */
   var LV = { de: { name: 'Dễ', n: 2, gain: 1, voice: 'Dễ, hai số' }, vua: { name: 'Vừa', n: 3, gain: 2, voice: 'Vừa, ba số' }, kho: { name: 'Khó', n: 4, gain: 4, voice: 'Khó, bốn số' } };
@@ -587,37 +778,42 @@ body {
   var dotsEl = $('dots'), dots = [];
   for (var di = 0; di < 10; di++) { var dd = document.createElement('span'); dd.className = 'dot'; dotsEl.appendChild(dd); dots.push(dd); }
 
-  var R = null, timerId = 0, nextId = 0, t0 = 0, lastSec = TIME, remain = TIME, answer = 0, sayExpr = '', showExpr = '';
+  var R = null, timerId = 0, nextId = 0, t0 = 0, lastSec = TIME, remain = TIME, running = false, answer = 0, sayExpr = '', showExpr = '';
   function rnd(a, b) { return a + Math.floor(Math.random() * (b - a + 1)); }
   function makeQuestion(terms, used) {
     var best = null;
     for (var tries = 0; tries < 200; tries++) {
-      var cur2 = rnd(1, 9), parts = [cur2];
+      var c2 = rnd(1, 9), parts = [c2];
       for (var k = 1; k < terms; k++) {
         var plus = Math.random() < 0.5;
-        if (cur2 >= 10) plus = false;
-        if (cur2 <= 0) plus = true;
-        var b = plus ? rnd(1, 10 - cur2) : rnd(1, cur2);
-        cur2 = plus ? cur2 + b : cur2 - b;
+        if (c2 >= 10) plus = false;
+        if (c2 <= 0) plus = true;
+        var b = plus ? rnd(1, 10 - c2) : rnd(1, c2);
+        c2 = plus ? c2 + b : c2 - b;
         parts.push(plus ? '+' : '−', b);
       }
-      best = { parts: parts, ans: cur2 };
+      best = { parts: parts, ans: c2 };
       var key = parts.join(' ');
-      if (!used[key] && !(R && R.lastAns === cur2 && tries < 20)) { used[key] = 1; return best; }
+      if (!used[key] && !(R && R.lastAns === c2 && tries < 20)) { used[key] = 1; return best; }
     }
     return best;
   }
   function startRound(k) {
     ac();
-    R = { lv: k, i: 0, right: 0, h0: S.h, used: {}, lastAns: -1 };
+    R = { lv: k, i: 0, right: 0, h0: S.h, used: {}, lastAns: -1, token: 0 };
     $('gLv').textContent = LV[k].name;
     for (var i = 0; i < 10; i++) dots[i].className = 'dot';
     refreshStars();
     show('game', nums[5]);
     nextQuestion();
   }
+  function setBar(left) {
+    var sc = 'scaleX(' + (left / TIME) + ')';
+    bar.style.webkitTransform = sc; bar.style.transform = sc;
+    if (left <= 3) timerEl.classList.add('low'); else timerEl.classList.remove('low');
+  }
   function nextQuestion() {
-    var q = makeQuestion(LV[R.lv].n, R.used);
+    var q = makeQuestion(LV[R.lv].n, R.used), token = ++R.token;
     answer = q.ans; R.lastAns = q.ans;
     var sp = [], sh = [], html = '';
     for (var m = 0; m < q.parts.length; m++) {
@@ -631,24 +827,24 @@ body {
     var chars = showExpr.length + 4;
     qEl.style.fontSize = Math.min(12, 84 / (chars * 0.52)).toFixed(2) + 'rem';
     qEl.className = 'question'; void qEl.offsetWidth; qEl.className = 'question anim-pop';
-    for (var i = 0; i < 10; i++) if (i === R.i) dots[i].className = 'dot now';
+    dots[R.i].className = 'dot now';
     for (var j = 0; j < nums.length; j++) { nums[j].classList.remove('right'); nums[j].classList.remove('wrong'); }
-    var readDelay = 700 + 430 * (q.parts.length + 2);
-    say(sayExpr + ' bằng mấy?');
-    runTimer(TIME, readDelay);
+    // Đọc xong câu hỏi mới bắt đầu tính 10 giây
+    locked = false; running = false; remain = TIME; setBar(TIME); secsEl.textContent = 'Nghe nhé...';
+    say(sayExpr + ' bằng mấy?', function () {
+      if (screen !== 'game' || !R || R.token !== token || !$('pause').hidden || !$('fb').hidden) return;
+      setTimeout(function () { if (R && R.token === token && $('pause').hidden && $('fb').hidden && !running) runTimer(TIME); }, 250);
+    });
   }
-  function runTimer(sec, delay) {
-    locked = false; remain = sec; t0 = Date.now() + (delay || 0) - (TIME - sec) * 1000; lastSec = TIME;
+  function runTimer(sec) {
+    running = true; remain = sec; t0 = Date.now() - (TIME - sec) * 1000; lastSec = TIME;
     clearInterval(timerId); timerId = setInterval(tickTimer, 50); tickTimer();
   }
   function tickTimer() {
     var left = Math.min(TIME, Math.max(0, TIME - (Date.now() - t0) / 1000));
-    remain = left;
-    var sc = 'scaleX(' + (left / TIME) + ')';
-    bar.style.webkitTransform = sc; bar.style.transform = sc;
+    remain = left; setBar(left);
     var s = Math.ceil(left);
     secsEl.textContent = s + ' giây';
-    if (left <= 3) timerEl.classList.add('low'); else timerEl.classList.remove('low');
     if (s < lastSec) { lastSec = s; if (s <= 3 && s > 0) beep(880, .08, .15); }
     if (left <= 0) result(false, true);
   }
@@ -660,34 +856,37 @@ body {
     result(ok, false);
   }
   function result(ok, timeout) {
-    locked = true; clearInterval(timerId);
-    var before = S.h;
+    locked = true; running = false; clearInterval(timerId);
+    var before = S.h, token = ++R.token;
     if (ok) { S.h += LV[R.lv].gain; R.right++; } else S.h = Math.max(0, S.h - 2);
     var delta = S.h - before;
     save(); refreshStars();
     dots[R.i].className = 'dot ' + (ok ? 'ok' : 'no');
-    $('fbEmoji').textContent = ok ? '🥰' : (timeout ? '⏰' : '💥');
+    $('fbFace').innerHTML = girlSVG(outfit(), '34 26 132 132', ok ? 'happy' : 'sad');
     var t = $('fbText');
     t.className = 'fb-big ' + (ok ? 'ok anim-pop' : 'no anim-shake');
-    t.textContent = ok ? 'Đúng rồi!' : 'Bạn nhầm rồi!';
+    t.textContent = ok ? 'Đúng rồi!' : (timeout ? 'Hết giờ rồi!' : 'Bạn nhầm rồi!');
     $('fbSub').textContent = showExpr + ' = ' + answer;
     var dl = $('fbDelta');
-    if (delta === 0) { dl.className = 'fb-delta'; dl.innerHTML = ok ? '' : 'Chưa có sao để trừ'; }
+    if (delta === 0) { dl.className = 'fb-delta'; dl.innerHTML = ''; }
     else { dl.className = 'fb-delta ' + (delta > 0 ? 'up' : 'down'); dl.innerHTML = (delta > 0 ? '+' : '−') + fmtHalves(delta) + ' ' + STAR; }
     $('fb').hidden = false;
-    var tail = ' ' + sayExpr + ' bằng ' + answer;
-    if (ok) { soundRight(); setTimeout(function () { say('Đúng rồi!' + tail); }, 350); }
-    else { soundWrong(); setTimeout(function () { say('Bạn nhầm rồi!' + tail); }, 450); }
-    clearTimeout(nextId);
-    nextId = setTimeout(function () {
-      $('fb').hidden = true;
-      R.i++;
-      if (R.i >= 10) endRound(); else nextQuestion();
-    }, 3000 + 420 * (LV[R.lv].n * 2 + 1));
+    var minEnd = Date.now() + 2200;
+    function next() {
+      if (!R || R.token !== token) return;
+      R.token++;
+      setTimeout(function () {
+        $('fb').hidden = true;
+        R.i++;
+        if (R.i >= 10) endRound(); else nextQuestion();
+      }, Math.max(700, minEnd - Date.now()));
+    }
+    if (ok) soundRight(); else soundWrong();
+    setTimeout(function () { say((ok ? 'Đúng rồi! ' : 'Bạn nhầm rồi! ') + sayExpr + ' bằng ' + answer, next); }, ok ? 300 : 550);
   }
   function endRound() {
     var d = S.h - R.h0;
-    $('resGirl').innerHTML = girlSVG(outfit(), null, 'happy');
+    drawRoom('resRoom');
     $('resRight').textContent = 'Đúng ' + R.right + '/10 câu';
     $('resDelta').innerHTML = (d > 0 ? '<span style="color:#2bb487">Được +' + fmtHalves(d) + '</span> ' : (d < 0 ? '<span style="color:#e05595">Mất ' + fmtHalves(d) + '</span> ' : 'Không đổi ')) + STAR;
     $('resTotal').innerHTML = 'Em có ' + starsHTML(S.h);
@@ -702,54 +901,58 @@ body {
   bind($('bResHome'), function () { goHome(true); });
 
   function pauseGame() {
-    if (screen !== 'game' || !$('pause').hidden) return;
+    if (screen !== 'game' || !$('pause').hidden || !$('fb').hidden) return;
     clearInterval(timerId);
-    var wasFb = !$('fb').hidden;
-    if (wasFb) return; // đang báo đúng/sai thì thôi
     locked = true;
     $('pause').hidden = false;
     setCur($('bResume'), true);
   }
   bind($('bResume'), function () {
     $('pause').hidden = true;
+    locked = false;
     setCur(nums[5], true);
-    runTimer(remain, 0);
+    runTimer(remain);
   });
-  bind($('bQuit'), function () { $('pause').hidden = true; clearTimeout(nextId); clearInterval(timerId); locked = false; goHome(true); });
+  bind($('bQuit'), function () { $('pause').hidden = true; if (R) R.token++; clearInterval(timerId); running = false; goHome(true); });
 
   /* ================= Cửa hàng ================= */
   var shopCat = 'toc', tabEls = {}, cardEls = [];
   var tabsEl = $('tabs'), gridEl = $('grid');
-  for (var ci = 0; ci < CATS.length; ci++) (function (c) {
+  for (var ci = 0; ci < CATS.length; ci++) (function (c, idx) {
     var t = document.createElement('div');
     t.className = 'tab f'; t.textContent = c[1];
+    t.style.left = (44.5 + (idx % 4) * 13.8) + 'rem';
+    t.style.top = (idx < 4 ? 7.6 : 12.8) + 'rem';
     t._focus = function () { if (shopCat !== c[0]) { shopCat = c[0]; renderCards(); } tryOn(null); };
-    t._nav = function (dir) { return dir === 'D' && cardEls.length ? cardEls[0] : null; };
+    t._nav = function (dir) { return dir === 'D' && idx >= 4 && cardEls.length ? cardEls[0] : null; };
     bind(t, function () { if (cardEls.length) setCur(cardEls[0]); });
-    tabsEl.appendChild(t); tabEls[c[0]] = t;
-  })(CATS[ci]);
+    $('shop').appendChild(t); tabEls[c[0]] = t;
+  })(CATS[ci], ci);
   function itemsOf(cat) { var r = []; for (var i = 0; i < ITEMS.length; i++) if (ITEMS[i].cat === cat) r.push(ITEMS[i]); return r; }
   function isWorn(it) { return S.wear[it.slot] === it.id; }
   function statusHTML(it) {
-    if (isWorn(it)) return '<span class="own">Đang mặc ✓</span>';
+    if (isWorn(it)) return '<span class="own">' + (isRoom(it) ? 'Đã đặt ✓' : 'Đang mặc ✓') + '</span>';
     if (S.own[it.id]) return '<span class="own">Đã có</span>';
     var s = '', cls = Math.floor(S.h / 2) >= it.price ? '' : ' class="poor"';
     for (var i = 0; i < it.price; i++) s += STAR;
     return '<span' + cls + '>' + s + '</span>';
   }
+  function miniSVG(it) {
+    if (isRoom(it)) { var f = {}; f[it.slot] = it; return roomSVG(f, null, cropFor(it)); }
+    return girlSVG(outfit(it), cropFor(it));
+  }
   function renderCards() {
     for (var k in tabEls) if (tabEls.hasOwnProperty(k)) tabEls[k].className = 'tab f' + (k === shopCat ? ' act' : '') + (tabEls[k] === cur ? ' on' : '');
     var list = itemsOf(shopCat), cols = list.length > 6 ? 4 : 3;
-    var w = cols === 4 ? 15.8 : 21.4, gap = (68 - cols * w) / (cols - 1);
+    var gap = 1.2, w = (54 - gap * (cols - 1)) / cols;
     gridEl.innerHTML = ''; cardEls = [];
     for (var i = 0; i < list.length; i++) (function (it, idx) {
       var c = document.createElement('div');
       c.className = 'card f t' + it.tier + (isWorn(it) ? ' wear' : '');
-      c.style.width = w + 'rem';
+      c.style.width = w.toFixed(2) + 'rem';
       c.style.left = ((idx % cols) * (w + gap)).toFixed(2) + 'rem';
-      c.style.top = (Math.floor(idx / cols) * 20.6) + 'rem';
-      c.innerHTML = '<div class="tag">' + TIER[it.tier] + '</div><div class="img">' + girlSVG(outfit(it), cropFor(it)) + '</div><div class="nm">' + it.name + '</div><div class="stt">' + statusHTML(it) + '</div>';
-      c._item = it;
+      c.style.top = (Math.floor(idx / cols) * 19.2) + 'rem';
+      c.innerHTML = '<div class="tag">' + TIER[it.tier] + '</div><div class="img">' + miniSVG(it) + '</div><div class="nm">' + it.name + '</div><div class="stt">' + statusHTML(it) + '</div>';
       c._focus = function () { tryOn(it); };
       c._nav = function (dir) { if (dir !== 'U') return null; return pick('U', cardEls) || tabEls[shopCat]; };
       bind(c, function () { useItem(it, c); });
@@ -758,25 +961,28 @@ body {
   }
   var tryTimer = 0;
   function tryOn(it) {
-    $('shopGirl').innerHTML = girlSVG(outfit(it), null, 'happy');
-    $('tryLabel').textContent = it && !isWorn(it) ? 'Thử: ' + it.name : '';
+    drawRoom('shopRoom', it && !isWorn(it) ? it : null);
+    $('tryLabel').innerHTML = it && !isWorn(it) ? '<span>Thử: ' + it.name + '</span>' : '';
     clearTimeout(tryTimer);
     if (it) tryTimer = setTimeout(function () { say(it.name + '. ' + (S.own[it.id] ? 'Đã có' : it.price + ' sao')); }, 350);
   }
   function bubble(t) { $('shopBubble').textContent = t; }
   function useItem(it, el) {
     clearTimeout(tryTimer);
+    var room = isRoom(it), line;
     if (S.own[it.id]) {
-      if (isWorn(it)) { S.wear[it.slot] = DEFAULT[it.slot] || null; bubble('Em cởi ra rồi nè.'); girlSay('Em cởi ra rồi nè.'); }
-      else { S.wear[it.slot] = it.id; bubble('Em mặc vào rồi nè! Đẹp không chị?'); girlSay('Em mặc vào rồi nè! Đẹp không chị?'); soundRight(); }
+      if (isWorn(it)) { S.wear[it.slot] = DEFAULT[it.slot] || null; line = room ? 'Em cất đi rồi nè.' : 'Em cởi ra rồi nè.'; }
+      else { S.wear[it.slot] = it.id; line = room ? 'Em đặt vào phòng rồi nè! Đẹp không chị?' : 'Em mặc vào rồi nè! Đẹp không chị?'; soundRight(); }
+      bubble(line); girlSay(line);
     } else if (Math.floor(S.h / 2) >= it.price) {
       S.h -= it.price * 2; S.own[it.id] = 1; S.wear[it.slot] = it.id;
-      bubble('Cảm ơn chị! Em thích lắm!'); soundBuy(); girlSay('Cảm ơn chị! Em thích lắm!');
-      $('shopGirl').className = 'girlbox'; void $('shopGirl').offsetWidth; $('shopGirl').className = 'girlbox anim-pop';
+      line = 'Cảm ơn chị! Em thích lắm!';
+      bubble(line); soundBuy(); girlSay(line);
+      var r = $('shopRoom'); r.className = 'room'; void r.offsetWidth; r.className = 'room anim-pop';
     } else {
       var need = it.price - Math.floor(S.h / 2);
-      bubble('Chị ơi, còn thiếu ' + need + ' sao nữa. Chị làm bài kiếm thêm nhé!');
-      girlSay('Chị ơi, còn thiếu ' + need + ' sao nữa. Chị làm bài kiếm thêm nhé!');
+      line = 'Chị ơi, còn thiếu ' + need + ' sao nữa. Chị làm bài kiếm thêm nhé!';
+      bubble(line); girlSay(line);
       el.className = el.className.replace(' anim-shake', ''); void el.offsetWidth; el.className += ' anim-shake';
       return;
     }
@@ -784,12 +990,12 @@ body {
     var idx = cardEls.indexOf(el);
     renderCards();
     setCur(cardEls[idx], true);
-    $('shopGirl').innerHTML = girlSVG(outfit(), null, 'happy');
-    $('tryLabel').textContent = '';
+    drawRoom('shopRoom');
+    $('tryLabel').innerHTML = '';
   }
   function openShop() {
     refreshStars();
-    bubble('Chị chọn đồ cho em nhé! Bấm OK để mua hoặc mặc.');
+    bubble('Chị chọn đồ cho em nhé! Bấm OK để mua, mặc hoặc đặt vào phòng.');
     renderCards();
     show('shop', cardEls[0]);
     girlSay('Chị chọn đồ cho em nhé!');
@@ -823,17 +1029,23 @@ body {
     if (screen === 'game' && !locked && /^[0-9]$/.test(k)) { setCur(nums[+k], true); choose(+k); }
   });
 
-  /* ================= Kích thước ================= */
+  /* ================= Kích thước: tự vừa màn TV ================= */
   function layout() {
-    var W = window.innerWidth - 32, H = window.innerHeight;
-    var u = Math.max(2, Math.min(W / 100, H / 56.25));
-    document.documentElement.style.fontSize = u.toFixed(3) + 'px';
+    var de = document.documentElement;
+    var W = Math.min(window.innerWidth || 9999, de.clientWidth || 9999) - 32;
+    var H = Math.min(window.innerHeight || 9999, de.clientHeight || 9999);
+    if (W < 100 || H < 100) return;
+    var u = Math.min(W / 100, H / 56.25) * (S.zoom / 100);
+    de.style.fontSize = Math.max(2, u).toFixed(3) + 'px';
   }
   window.addEventListener('resize', layout);
-  layout();
+  window.addEventListener('load', layout);
 
   load();
+  zoomLabel();
+  layout();
+  setTimeout(layout, 300); setTimeout(layout, 1200);
   goHome(true);
-  setTimeout(function () { girlSay('Chị ơi, em muốn mua đồ! Chị làm bài để kiếm tiền cho em mua nhé!'); }, 1500);
+  setTimeout(function () { ac(); girlSay('Chị ơi, em muốn mua đồ! Chị làm bài để kiếm tiền cho em mua nhé!'); }, 1500);
 })();
 </script>
