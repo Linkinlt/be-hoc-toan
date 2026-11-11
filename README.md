@@ -10,7 +10,7 @@ Game toán cộng trừ trong phạm vi 10 cho bé 5 tuổi, chơi trên Android
   - **Khó**: phép tính 4 số, 1 câu đúng = 2 ⭐
   - Trả lời sai hoặc hết giờ: mất 1 ⭐ (không xuống dưới 0)
 - Mỗi bài 10 câu, mỗi câu 10 giây (tính sau khi đọc xong câu hỏi). Câu hỏi ngẫu nhiên, không trùng trong một bài, kết quả luôn từ 0 đến 10.
-- App đọc câu hỏi; đúng thì "Bùm không cùi!", sai thì "Bùm cùi thế, cùi thế!", rồi đọc lại phép tính và kết quả.
+- App đọc câu hỏi; đúng thì khen "Đúng rồi!", sai thì "Bạn nhầm rồi!", rồi đọc lại phép tính và kết quả.
 - **Cửa hàng**: Tóc, Áo, Quần, Váy, Giày, Phụ kiện. Mỗi loại có mức **Vừa (1 ⭐)**, **Đẹp (2 ⭐)**, **Sang trọng (3 ⭐)**. Đồ đã mua bấm OK để mặc / cởi. Sao và đồ được lưu lại.
 
 ## Remote

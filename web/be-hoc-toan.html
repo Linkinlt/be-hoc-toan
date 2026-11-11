@@ -669,15 +669,15 @@ body {
     $('fbEmoji').textContent = ok ? '🥰' : (timeout ? '⏰' : '💥');
     var t = $('fbText');
     t.className = 'fb-big ' + (ok ? 'ok anim-pop' : 'no anim-shake');
-    t.textContent = ok ? 'Puca love garu!' : 'Bùm Cùi!';
+    t.textContent = ok ? 'Đúng rồi!' : 'Bạn nhầm rồi!';
     $('fbSub').textContent = showExpr + ' = ' + answer;
     var dl = $('fbDelta');
     if (delta === 0) { dl.className = 'fb-delta'; dl.innerHTML = ok ? '' : 'Chưa có sao để trừ'; }
     else { dl.className = 'fb-delta ' + (delta > 0 ? 'up' : 'down'); dl.innerHTML = (delta > 0 ? '+' : '−') + fmtHalves(delta) + ' ' + STAR; }
     $('fb').hidden = false;
     var tail = ' ' + sayExpr + ' bằng ' + answer;
-    if (ok) { soundRight(); setTimeout(function () { say('Bùm không cùi!' + tail); }, 350); }
-    else { soundWrong(); setTimeout(function () { say('Bùm cùi thế, cùi thế!' + tail); }, 450); }
+    if (ok) { soundRight(); setTimeout(function () { say('Đúng rồi!' + tail); }, 350); }
+    else { soundWrong(); setTimeout(function () { say('Bạn nhầm rồi!' + tail); }, 450); }
     clearTimeout(nextId);
     nextId = setTimeout(function () {
       $('fb').hidden = true;
